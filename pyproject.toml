@@ -10,6 +10,7 @@ dependencies = [
     "langchain-anthropic>=1.4.4",
     "langchain-core>=1.4.0",
     "langchain-openai>=1.2.2",
+    "pydantic>=2.13.4",
     "python-dotenv>=1.2.2",
     "rich>=15.0.0",
     "ruff>=0.15.15",
