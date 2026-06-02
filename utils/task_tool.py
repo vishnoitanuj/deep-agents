@@ -4,6 +4,7 @@ from langchain.agents import create_agent
 from langgraph.prebuilt import InjectedState
 from langchain_core.messages import ToolMessage
 from langgraph.types import Command
+from utils.state import DeepAgentState
 
 class SubAgent(TypedDict):
     """Configuration for a specialized agent"""
@@ -47,7 +48,7 @@ def _create_task_tool(tools, subagents: list[SubAgent], model, state_schema):
         agents[_agent["name"]] = create_agent(model=model, tools=_tools, system_prompt=_agent["prompt"], state_schema=state_schema)
     
     subagents_agents_string = [
-        f"-{_agent['name']}: {_agent['description']}" for _agent in subagents
+        f"- {_agent['name']}: {_agent['description']}" for _agent in subagents
     ]
 
     TASK_DESCRIPTION = f"Delegate a task to a specialized sub-agent with isolated context. Available agents for delegation are: {subagents_agents_string}"
@@ -56,10 +57,10 @@ def _create_task_tool(tools, subagents: list[SubAgent], model, state_schema):
     def task(
         description: str,
         subagent_type: str,
-        state: Annotated[str, InjectedState],
-        tool_call_id = Annotated[str, InjectedToolCallId]
+        state: Annotated[DeepAgentState, InjectedState],
+        tool_call_id: Annotated[str, InjectedToolCallId]
     ):
-        """Delegate a tasl to a specialized sub-agent with isolated context.
+        """Delegate a task to a specialized sub-agent with isolated context.
         
         This creates a fresh context for the sub-agent containing only the task description,
         preventing context pollution from the parent agents's conversation history.
